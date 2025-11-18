@@ -18,7 +18,11 @@ const News = (props) => {
     props.setProgress(10);
     setLoading(true);
 
-    const url = `https://gnews.io/api/v4/top-headlines?category=${props.category}&lang=en&country=${props.country}&max=${props.pagesize}&apikey=bef8eb024c885302e7002e308616e7e8&page=${page}`;
+    // Use Netlify function in production, direct API in development
+    const isProduction = window.location.hostname !== 'localhost';
+    const url = isProduction 
+      ? `/.netlify/functions/news-api?category=${props.category}&country=${props.country}&max=${props.pagesize}&page=${page}`
+      : `https://gnews.io/api/v4/top-headlines?category=${props.category}&lang=en&country=${props.country}&max=${props.pagesize}&apikey=bef8eb024c885302e7002e308616e7e8&page=${page}`;
 
     try {
       const response = await fetch(url);
@@ -41,7 +45,11 @@ const News = (props) => {
   const fetchMoreData = async () => {
     const nextPage = page + 1;
 
-    const url = `https://gnews.io/api/v4/top-headlines?category=${props.category}&lang=en&country=${props.country}&max=${props.pagesize}&apikey=bef8eb024c885302e7002e308616e7e8&page=${nextPage}`;
+    // Use Netlify function in production, direct API in development
+    const isProduction = window.location.hostname !== 'localhost';
+    const url = isProduction
+      ? `/.netlify/functions/news-api?category=${props.category}&country=${props.country}&max=${props.pagesize}&page=${nextPage}`
+      : `https://gnews.io/api/v4/top-headlines?category=${props.category}&lang=en&country=${props.country}&max=${props.pagesize}&apikey=bef8eb024c885302e7002e308616e7e8&page=${nextPage}`;
 
     try {
       const response = await fetch(url);
